@@ -1,0 +1,134 @@
+﻿@model RateYourMovie.ViewModels.MovieWComments
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div>
+    <div class="row pt-4 mb-5">
+        <div class="col-3">
+            <img src="@Model.PosterUrl" class="poster"/>
+        </div>
+        <div class="col-6">
+            <h1 class="title">@Model.Name</h1>
+            <div class="subtitle row">
+                <h3 class="year">@Model.ReleaseYear</h3>
+                &nbsp
+                <h3 class="director">Directed by: @Model.DirectorName</h3>
+            </div>
+            <div class="row">
+                <p class="col-8">
+                    @Model.Description
+                </p>
+                <div class="col-4">
+                    <h3 class="rating-text">Rating:</h3>
+                    <div class="row">
+                    <h3>@(Model.Rating/2)</h3>
+                    
+                    @switch (Convert.ToInt32(Math.Floor(Model.Rating)))
+                    {
+                        case 1:
+                                            <span class="rating">½</span>
+                            break;
+                        case 2:
+                                            <span class="rating">★</span>
+                            break;
+                        case 3:
+                                            <span class="rating">★½ </span>
+                            break;
+                        case 4:
+                                            <span class="rating">★★</span>
+                            break;
+                        case 5:
+                                            <span class="rating">★★½ </span>
+                            break;
+                        case 6:
+                                            <span class="rating">★★★</span>
+                            break;
+                        case 7:
+                                            <span class="rating">★★★½ </span>
+                            break;
+                        case 8:
+                                            <span class="rating">★★★★</span>
+                            break;
+                        case 9:
+                                            <span class="rating">★★★★½ </span>
+                            break;
+                        case 10:
+                                            <span class="rating">★★★★★</span>
+                            break;
+
+                    }
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+    <h2>Comments</h2>
+    <ul>
+    @foreach (var comment in Model.Comments)
+    {
+        <li class="film-review">
+            <div class="film-rewiew-content">
+                <div class="attribution-block">
+                    <p class="attribution">
+                        Review by
+                            <strong class="name">@((from user in Model.Db.Users where user.Id == comment.UserId select user.FirstName).FirstOrDefault().ToString()) </strong>
+                            <strong class="name">@((from user in Model.Db.Users where user.Id == comment.UserId select user.LastName).FirstOrDefault().ToString()) </strong>
+                            &nbsp;
+                            @switch (comment.NumberOfStars)
+                            {
+                                case 1:
+                                    <span class="rating-in-comment">½</span>
+                                    break;
+                                case 2:
+                                    <span class="rating-in-comment">★</span>
+                                    break;
+                                case 3:
+                                    <span class="rating-in-comment">★½ </span>
+                                    break;
+                                case 4:
+                                    <span class="rating-in-comment">★★</span>
+                                    break;
+                                case 5:
+                                    <span class="rating-in-comment">★★½ </span>
+                                    break;
+                                case 6:
+                                    <span class="rating-in-comment">★★★</span>
+                                    break;
+                                case 7:
+                                    <span class="rating-in-comment">★★★½ </span>
+                                    break;
+                                case 8:
+                                    <span class="rating-in-comment">★★★★</span>
+                                    break;
+                                case 9:
+                                    <span class="rating-in-comment">★★★★½ </span>
+                                    break;
+                                case 10:
+                                    <span class="rating-in-comment">★★★★★</span>
+                                    break;
+
+                            }
+                    </p>
+                </div>
+                <div class="body-text">
+                    <p>@comment.Comment</p>
+                </div>
+            </div>
+        </li>
+    }
+    </ul>
+</div>
+    <div>
+    @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-secondary">Edit</a>
+    }
+    <a asp-action="Index" class="btn btn-primary" style="background-color:#aeb9da; color: #f0f5fa;width:150px">Back to List</a>
+        
+    </div>
+

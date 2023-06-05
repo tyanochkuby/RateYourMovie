@@ -1,0 +1,27 @@
+﻿@model RateYourMovie.Models.Movie
+
+<form method="post" asp-action="Remove">
+    <div class="border p-3 mt-4">
+        <div class=" row pb-2">
+            <h2 class="text-primary">Edit movie properties</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <input type="hidden" asp-for="Name" class="form-control mt-1" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input type="hidden" asp-for="DirectorName" class="form-control mt-1" />
+            <span asp-validation-for="DirectorName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary me-sm-3" style="background-color:#aeb9da; color: #f0f5fa;width:150px">Submit</button>
+        <a asp-controller="Movie" asp-action="Index" class="btn" style="width: 150px">Back</a>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+

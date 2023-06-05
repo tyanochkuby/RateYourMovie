@@ -1,0 +1,101 @@
+﻿@model RateYourMovie.ViewModels.MovieListWMaxPage
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-3">
+            <h2 class="text-primary">Movie-list</h2>
+        </div>
+        <div class="col-6 row">
+            @using (Html.BeginForm("Index", "Movie", FormMethod.Post, new {@class = "row"}))
+            {
+                @Html.TextBox("SearchString", "Search", new {@class="form-control me-sm-2 col-8", @style="width:50%;"})
+                <button class="btn btn-secondary my-2 my-sm-0 col-2" type="submit">Search</button>
+            }
+        </div>
+        @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+        {
+        <div class="col-3 text-end">
+                <a asp-controller="Movie" asp-action="Create" class="btn btn-primary">
+               <i class="bi bi-plus-lg"></i> &nbsp; Add new movie
+            </a>
+        </div>
+        }
+    </div>
+
+    <table class="table table-bordered teble-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.NameSortParm })
+                </th>
+                <th>
+                    @Html.ActionLink("Directed by", "Index", new { sortOrder = ViewBag.DirectorSortParam})
+                </th>
+                <th>
+                    @Html.ActionLink("Rating", "Index", new { sortOrder = ViewBag.RatingSortParam })
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var movie in Model.MovieList)
+            {
+                @if (movie.IsDeleted == false)
+                {
+                    <tr>
+                        <td width="40%">
+                            <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id"><h3 class="pt-3">@movie.Name</h3></a>
+                        </td>
+                        <td width="40%">
+                                <h3 class="pt-3">@movie.DirectorName</h3>
+                        </td>
+                        <td width="20%">
+                                <h3 class="pt-3">@movie.Rating</h3>
+                        </td>
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                        <td>
+                            <a asp-controller="Movie" asp-action="Rate" asp-route-id="@movie.Id" style="height: 3rem; width: 3rem; border-radius: 1rem; margin-top: 0.5rem; padding-left: 8px; padding-top: 14px" class="btn text-center">Rate</a>
+                        </td>
+                        }
+                        @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                        {
+                            
+                            <td>
+                                            <a asp-controller="Movie" asp-action="Edit" asp-route-id="@movie.Id" style="height: 3rem; width: 3rem; border-radius: 1rem; margin-top: 0.5rem; padding-left: 15px; padding-top: 14px" class="btn text-center"><i class="bi bi-pencil-fill mb-5 text-center" style="padding-right: 1rem;"></i></a>
+                            </td>
+                            <td>
+                                            <a asp-controller="Movie" asp-action="Remove" asp-route-id="@movie.Id" style="height: 3rem; width: 3rem; border-radius: 1rem; margin-top: 0.5rem; padding-left: 15px; padding-top: 14px" class="btn btn-danger text-center"><i class="bi bi-trash-fill"></i></a>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <br />
+    Page @(Model.MaxPage < Model.CurrentPage ? 0 : Model.CurrentPage) of @Model.MaxPage
+    <br />
+    @for (int page = 1; page <= Model.MaxPage; page++)
+    {
+        if (page == Model.CurrentPage)
+        {
+                    <a class="btn btn-outline-light" href="@Url.Action("Index", new { page = page, sortOrder = ViewBag.CurrentSort })">
+                @Convert.ToString(page)
+            </a>
+        }
+        else
+        {
+            <a class="btn" href="@Url.Action("Index", new { page = page, sortOrder = ViewBag.CurrentSort })">
+                @Convert.ToString(page)
+            </a>
+        }
+    }
+</div>
+
+
