@@ -69,7 +69,7 @@
     </div>
     <h2>Comments</h2>
     @*@Html.ActionLink("Rate", "Rate", "Movie");*@
-    <a class="nav-link text-dark" asp-controller="Movie" asp-action="Rate", asp-route-id="@Model.Id">Rate the movie</a>
+    <a class="btn btn-secondary" asp-controller="Movie" asp-action="Rate", asp-route-id="@Model.Id">Rate the movie</a>
     <ul>
     @foreach (var comment in Model.Comments)
     {
