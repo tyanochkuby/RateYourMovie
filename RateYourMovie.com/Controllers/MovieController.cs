@@ -81,8 +81,8 @@ namespace RateYourMovie.Controllers
         //GET
         public IActionResult Details(string id)
         {
-            var commentList = (from Comment in _db.Rating where Comment.MovieId == id select Comment).ToList();
-            Movie movie = _db.Movie.Find(id);
+            var commentList = _db.Rating.Where(c => c.MovieId == id).ToList(); //(from Comment in _db.Rating where Comment.MovieId == id select Comment).ToList();
+            Movie movie = _db.Movie.Find(id) ?? new Movie { };
             var rating = (from c in _db.Rating where c.MovieId == id select c.NumberOfStars).ToList().DefaultIfEmpty(0).Average();
             var detailModel = new MovieWComments(movie, commentList, _db);
             detailModel.Rating = rating;
@@ -90,12 +90,12 @@ namespace RateYourMovie.Controllers
         }
 
         //GET
-        public IActionResult Rate(string? id)
+        public IActionResult Rate(string id)
         {
             if (id == null)
                 return NotFound();
             string? userId = null;
-            var claimsIdentity = User.Identity as ClaimsIdentity;
+            ClaimsIdentity? claimsIdentity = User.Identity as ClaimsIdentity;
             if (claimsIdentity != null)
             {
                 // the principal identity is a claims identity.
@@ -112,11 +112,18 @@ namespace RateYourMovie.Controllers
             if(userId == null)
                 return BadRequest();
             var objComment = new UserComment();
-            var query = (from comment in _db.Rating where comment.MovieId == id && comment.UserId == userId select new { comment.Comment, comment.NumberOfStars }).FirstOrDefault();
+            var query = _db.Rating.Where(c => c.MovieId == id && c.UserId == userId)
+                                  .Select(c => new { c.Comment, c.NumberOfStars })
+                                  .FirstOrDefault(); //from comment in _db.Rating where comment.MovieId == id && comment.UserId == userId select new { comment.Comment, comment.NumberOfStars }).FirstOrDefault();
             if (query != null)
             {
                 objComment.Comment = query.Comment;
                 objComment.NumberOfStars = query.NumberOfStars;
+            }
+            else 
+            { 
+                objComment.Comment = null;
+                objComment.NumberOfStars = 0;
             }
             objComment.UserId = userId;
             objComment.MovieId = id;
@@ -129,10 +136,10 @@ namespace RateYourMovie.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Rate(UserComment userComment)
         {
-
             if (ModelState.IsValid)
             {
-                var commentsOfUser = (from c in _db.Rating where c.UserId == userComment.UserId select c).ToList();
+                var commentsOfUser = (_db.Rating.Where(c => c.UserId == userComment.UserId))
+                                                .ToList();
                 foreach(var comment in commentsOfUser)
                 {
                     if (comment.MovieId == userComment.MovieId)

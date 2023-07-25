@@ -18,22 +18,23 @@
             <label asp-for="NumberOfStars"></label>
             <select asp-for="NumberOfStars" class="form-control" aria-required="true">
                     <option value="">Choose rating</option>
-                    <option value=1>0.5</option>
-                    <option value=2>1</option>
-                    <option value=3>1.5</option>
-                    <option value=4>2</option>
-                    <option value=5>2.5</option>
-                    <option value=6>3</option>
-                    <option value=7>3.5</option>
-                    <option value=8>4</option>
-                    <option value=9>4.5</option>
-                    <option value=10>5</option>
+                    <option value=1>½</option>
+                    <option value=2>★</option>
+                    <option value=3>★½</option>
+                    <option value=4>★★</option>
+                    <option value=5>★★½</option>
+                    <option value=6>★★★</option>
+                    <option value=7>★★★½</option>
+                    <option value=8>★★★★</option>
+                    <option value=9>★★★★½</option>
+                    <option value=10>★★★★★</option>
 
             </select>                
         </div>
         <div class="mb-3">
             <label asp-for="Comment"></label>
-            <input asp-for="Comment" class="form-control mt-1" />
+            @*<input asp-for="Comment" class="form-control mt-1 input-lg" id="inputlg"/>*@
+            <textarea asp-for="Comment" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
             <span asp-validation-for="Comment" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary me-sm-3" style="background-color:#aeb9da; color: #f0f5fa;width:150px">Sumbit</button>
