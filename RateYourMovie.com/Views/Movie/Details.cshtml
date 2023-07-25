@@ -68,6 +68,8 @@
         </div>
     </div>
     <h2>Comments</h2>
+    @*@Html.ActionLink("Rate", "Rate", "Movie");*@
+    <a class="btn btn-secondary" asp-controller="Movie" asp-action="Rate", asp-route-id="@Model.Id">Rate the movie</a>
     <ul>
     @foreach (var comment in Model.Comments)
     {
@@ -76,7 +78,7 @@
                 <div class="attribution-block">
                     <p class="attribution">
                         Review by
-                            <strong class="name">@((from user in Model.Db.Users where user.Id == comment.UserId select user.FirstName).FirstOrDefault().ToString()) </strong>
+                            <strong class="name">@(Model.Db.Users.Where(user => user.Id == comment.UserId).Select(user => user.FirstName).FirstOrDefault().ToString()) </strong>
                             <strong class="name">@((from user in Model.Db.Users where user.Id == comment.UserId select user.LastName).FirstOrDefault().ToString()) </strong>
                             &nbsp;
                             @switch (comment.NumberOfStars)

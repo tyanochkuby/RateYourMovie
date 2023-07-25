@@ -45,7 +45,7 @@
         <tbody>
             @foreach(var movie in Model.MovieList)
             {
-                @if (movie.IsDeleted == false)
+                @if (!movie.IsDeleted)
                 {
                     <tr>
                         <td width="40%">
